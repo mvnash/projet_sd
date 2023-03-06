@@ -1,27 +1,14 @@
 public class Ligne {
-    private int id, duree;
+    private int id, numeroTransport, tempsTrajets;
     private Station stationDepart, stationArrivee;
+    private String transport;
 
-    public Ligne(int id, int duree, Station stationDepart, Station stationArrivee) {
+    public Ligne(int id, int numero, int tempsTrajets, Station stationDepart, Station stationArrivee, String transport) {
         this.id = id;
-        this.duree = duree;
+        this.numeroTransport = numero;
+        this.tempsTrajets = tempsTrajets;
         this.stationDepart = stationDepart;
         this.stationArrivee = stationArrivee;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public int getDuree() {
-        return duree;
-    }
-
-    public Station getStationDepart() {
-        return stationDepart;
-    }
-
-    public Station getStationArrivee() {
-        return stationArrivee;
+        this.transport = transport;
     }
 }
