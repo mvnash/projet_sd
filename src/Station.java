@@ -1,5 +1,3 @@
-package Domain;
-
 import java.util.Objects;
 
 public class Station {
@@ -30,7 +28,7 @@ public class Station {
 
     @Override
     public String toString() {
-        return "Domain.Station{" +
+        return "Station{" +
                 "nomStation='" + nomStation + '\'' +
                 '}';
     }
