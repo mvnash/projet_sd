@@ -1,19 +1,17 @@
 public class Troncon {
-    private int identifiant_ligne;
+    private Ligne ligne;
     private Station stationDepart;
     private Station stationFin;
     private int duree;
 
-    public Troncon(int identifiant_ligne, Station stationDepart, Station stationFin, int duree) {
-        this.identifiant_ligne = identifiant_ligne;
+    public Troncon(Ligne ligne, Station stationDepart, Station stationFin, int duree) {
+        this.ligne = ligne;
         this.stationDepart = stationDepart;
         this.stationFin = stationFin;
         this.duree = duree;
     }
 
-    public int getIdentifiant_ligne() {
-        return identifiant_ligne;
-    }
+
 
     public Station getStationDepart() {
         return stationDepart;
@@ -27,8 +25,12 @@ public class Troncon {
         return duree;
     }
 
-    public void setIdentifiant_ligne(int identifiant_ligne) {
-        this.identifiant_ligne = identifiant_ligne;
+    public Ligne getLigne() {
+        return ligne;
+    }
+
+    public void setLigne(Ligne ligne) {
+        this.ligne = ligne;
     }
 
     public void setStationDepart(Station stationDepart) {
@@ -41,5 +43,10 @@ public class Troncon {
 
     public void setDuree(int duree) {
         this.duree = duree;
+    }
+
+    @Override
+    public String toString() {
+        return "Troncon[" +  "Depart=" + stationDepart + ", Arrivee=" + stationFin + ", duree=" + duree + "["+ ligne + "]" + ']';
     }
 }

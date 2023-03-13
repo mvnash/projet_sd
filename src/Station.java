@@ -28,8 +28,6 @@ public class Station {
 
     @Override
     public String toString() {
-        return "Station{" +
-                "nomStation='" + nomStation + '\'' +
-                '}';
+        return nomStation;
     }
 }
