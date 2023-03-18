@@ -1,9 +1,9 @@
 public class Ligne {
     private int id, attenteMoyenne;
-    private Station stationDepart, stationArrivee;
+    private String stationDepart, stationArrivee;
     private String typeTransport,numeroTransport;
 
-    public Ligne(int id, int attenteMoyenne, Station stationDepart, Station stationArrivee, String typeTransport, String numeroTransport) {
+    public Ligne(int id, int attenteMoyenne, String stationDepart, String stationArrivee, String typeTransport, String numeroTransport) {
         this.id = id;
         this.attenteMoyenne = attenteMoyenne;
         this.stationDepart = stationDepart;
@@ -20,11 +20,11 @@ public class Ligne {
         this.attenteMoyenne = attenteMoyenne;
     }
 
-    public void setStationDepart(Station stationDepart) {
+    public void setStationDepart(String stationDepart) {
         this.stationDepart = stationDepart;
     }
 
-    public void setStationArrivee(Station stationArrivee) {
+    public void setStationArrivee(String stationArrivee) {
         this.stationArrivee = stationArrivee;
     }
 
@@ -44,11 +44,11 @@ public class Ligne {
         return attenteMoyenne;
     }
 
-    public Station getStationDepart() {
+    public String getStationDepart() {
         return stationDepart;
     }
 
-    public Station getStationArrivee() {
+    public String getStationArrivee() {
         return stationArrivee;
     }
 
@@ -62,13 +62,11 @@ public class Ligne {
 
     @Override
     public String toString() {
-        return
-                "id=" + id +
+        return "id=" + id +
                 ", nom=" + numeroTransport +
                 ", source=" + stationDepart +
                 ", destination=" + stationArrivee +
                 ", type='" + typeTransport + '\'' +
-                ", attente='" + attenteMoyenne + '\'' +
-                '}';
+                ", attente='" + attenteMoyenne + '\'';
     }
 }

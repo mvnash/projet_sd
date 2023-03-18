@@ -22,28 +22,29 @@ public class Graph {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
+        try {
+            scannerTroncons = new Scanner(troncons);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
         String ligneFichierLignes;
 
         while (scannerLigne.hasNext()) {
             ligneFichierLignes = scannerLigne.nextLine();
             String[] datas = ligneFichierLignes.split(",");
-            Integer identifiantLigne = Integer.parseInt(datas[0]);
+            int identifiantLigne = Integer.parseInt(datas[0]);
             String numeroTransport = datas[1];
-            Station stationDepart = correspondanceStringStation.get(datas[2]); // TODO UTILISER DES STRINGS A LA PLACE DE STATION
-            Station stationArrivee = correspondanceStringStation.get(datas[3]);
+            String stationDepart = datas[2];
+            String stationArrivee = datas[3];
             String typeTransport = datas[4];
-            Integer attenteEstimee = Integer.parseInt(datas[5]);
+            int attenteEstimee = Integer.parseInt(datas[5]);
 
             Ligne nouvelleLigne = new Ligne(identifiantLigne, attenteEstimee, stationDepart, stationArrivee, typeTransport, numeroTransport);
             correspondanceIdLigneVersLigne.put(identifiantLigne, nouvelleLigne);
         }
 
-        try {
-            scannerTroncons = new Scanner(troncons);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+
 
         String ligneFichierTroncons;
 
@@ -77,8 +78,8 @@ public class Graph {
         HashSet<Station> stationsParcourues = new HashSet<>();
         Queue<Station> fileBFS = new ArrayDeque<>();
 
-        Station stationArrivee = correspondanceStringStation.get(nomStationArrivee);
         Station stationDepart = correspondanceStringStation.get(nomStationDepart);
+        Station stationArrivee = correspondanceStringStation.get(nomStationArrivee);
         stationsParcourues.add(stationDepart);
         fileBFS.add(stationDepart);
         boolean trouve = false;
@@ -99,14 +100,26 @@ public class Graph {
                 }
             }
         }
-
+        int dureeTotale = 0;
+        int dureeTransport = 0;
         Station retracageStation = stationArrivee;
         while (!retracageStation.equals(stationDepart)) {
             Troncon tronconRetracage = parcoursDesStations.get(retracageStation);
-            if (tronconRetracage==null) break;
+            if (tronconRetracage==null) {
+                break;
+            }
+            dureeTransport += tronconRetracage.getDuree();
             System.out.println(tronconRetracage);
             retracageStation = tronconRetracage.getStationDepart();
+            Troncon nvTroncon = parcoursDesStations.get(retracageStation);
+            if (nvTroncon==null) {
+                break;
+            }
+
         }
+        dureeTotale += dureeTransport;
+
+        System.out.println("dureeTransport="+dureeTransport + "  dureeTotale=" + dureeTotale );
 
     }
 
