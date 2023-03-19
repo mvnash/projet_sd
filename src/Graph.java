@@ -3,16 +3,12 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Graph {
-    private File lignes, troncons;
-    Map<String, Station> correspondanceStringStation;
-    Map<Station, Set<Troncon>> mapTronconsParStation;
-    Map<Integer, Ligne> correspondanceIdLigneVersLigne;
+    private Map<String, Station> correspondanceStringStation;
+    private Map<Station, Set<Troncon>> mapTronconsParStation;
+    private Map<Integer, Ligne> correspondanceIdLigneVersLigne;
     private Scanner scannerTroncons, scannerLigne;
 
     public Graph(File lignes, File troncons) {
-        this.lignes = lignes;
-        this.troncons = troncons;
-
         correspondanceStringStation = new HashMap<>();
         mapTronconsParStation = new HashMap<>();
         correspondanceIdLigneVersLigne = new HashMap<>();
@@ -102,14 +98,19 @@ public class Graph {
         }
         int dureeTotale = 0;
         int dureeTransport = 0;
+        int nbTroncons = 0;
         Station retracageStation = stationArrivee;
+        ArrayList<Troncon> tracageParcours = new ArrayList<>();
+        HashSet<Ligne> lignesParcourues = new HashSet();
         while (!retracageStation.equals(stationDepart)) {
+            nbTroncons++;
             Troncon tronconRetracage = parcoursDesStations.get(retracageStation);
             if (tronconRetracage==null) {
                 break;
             }
+            lignesParcourues.add(tronconRetracage.getLigne());
+            tracageParcours.add(tronconRetracage);
             dureeTransport += tronconRetracage.getDuree();
-            System.out.println(tronconRetracage);
             retracageStation = tronconRetracage.getStationDepart();
             Troncon nvTroncon = parcoursDesStations.get(retracageStation);
             if (nvTroncon==null) {
@@ -118,9 +119,17 @@ public class Graph {
 
         }
         dureeTotale += dureeTransport;
+        for (Ligne lignesParcourue : lignesParcourues) {
+            dureeTotale += lignesParcourue.getAttenteMoyenne();
+        }
 
+        Collections.reverse(tracageParcours);
+        for (Troncon troncon : tracageParcours) {
+            System.out.println(troncon);
+        }
+
+        System.out.println("NbrTroncons="+nbTroncons);
         System.out.println("dureeTransport="+dureeTransport + "  dureeTotale=" + dureeTotale );
-
     }
 
     public void calculerCheminMinimisantTempsTransport(String stationDepart, String stationArrivee) {

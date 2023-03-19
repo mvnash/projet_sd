@@ -47,6 +47,6 @@ public class Troncon {
 
     @Override
     public String toString() {
-        return "Troncon[" +  "Depart=" + stationDepart + ", Arrivee=" + stationFin + ", duree=" + duree + ", ligne=ligne ["+ ligne + "]" + ']';
+        return "Troncon[" +  "Depart=" + stationDepart + ", Arrivee=" + stationFin + ", duree=" + duree + ", ligne=["+ ligne + "]" + ']';
     }
 }
