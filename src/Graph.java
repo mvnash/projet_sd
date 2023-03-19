@@ -165,11 +165,11 @@ public class Graph {
         ArrayList<Troncon> tracageParcours = new ArrayList<>();
         HashSet<Ligne> lignesParcourues = new HashSet();
         while (!retracageStation.equals(stationDepart)) {
-            nbTroncons++;
             Troncon tronconRetracage = parcoursDesStations.get(retracageStation);
             if (tronconRetracage==null) {
                 break;
             }
+            nbTroncons++;
             lignesParcourues.add(tronconRetracage.getLigne());
             tracageParcours.add(tronconRetracage);
             dureeTransport += tronconRetracage.getDuree();
