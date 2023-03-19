@@ -112,11 +112,6 @@ public class Graph {
             tracageParcours.add(tronconRetracage);
             dureeTransport += tronconRetracage.getDuree();
             retracageStation = tronconRetracage.getStationDepart();
-            Troncon nvTroncon = parcoursDesStations.get(retracageStation);
-            if (nvTroncon==null) {
-                break;
-            }
-
         }
         dureeTotale += dureeTransport;
         for (Ligne lignesParcourue : lignesParcourues) {
@@ -133,6 +128,64 @@ public class Graph {
     }
 
     public void calculerCheminMinimisantTempsTransport(String stationDepart, String stationArrivee) {
-        return;
+        Queue<Station> file = new ArrayDeque<>();
+        HashSet<Station> stationsParcourues = new HashSet<>();
+        HashMap<Station, Troncon> parcoursDesStations = new HashMap<>();
+        Map<Station, Integer> tempsTransportParStation = new HashMap<>();
+
+        Station depart = correspondanceStringStation.get(stationDepart);
+        Station arrivee = correspondanceStringStation.get(stationArrivee);
+
+        tempsTransportParStation.put(depart,0);
+        stationsParcourues.add(depart);
+        file.add(depart);
+
+        while (!file.isEmpty()){
+            Station stationParcourue = file.poll();
+            Set<Troncon> ensembleTronconsSortant = mapTronconsParStation.get(stationParcourue);
+
+            if (stationParcourue.equals(arrivee)) break;
+
+            for (Troncon troncon : ensembleTronconsSortant) {
+                Station arriveeTronconCourant = troncon.getStationFin();
+                int tempsPourSuivant = tempsTransportParStation.get(stationParcourue) + troncon.getDuree();
+                if (!tempsTransportParStation.containsKey(arriveeTronconCourant) || tempsPourSuivant < tempsTransportParStation.get(arriveeTronconCourant)){
+                    tempsTransportParStation.put(arriveeTronconCourant, tempsPourSuivant);
+                    parcoursDesStations.put(arriveeTronconCourant, troncon);
+                    file.add(arriveeTronconCourant);
+                }
+            }
+        }
+
+        // Affichage
+        int dureeTotale = 0;
+        int dureeTransport = 0;
+        int nbTroncons = 0;
+        Station retracageStation = arrivee;
+        ArrayList<Troncon> tracageParcours = new ArrayList<>();
+        HashSet<Ligne> lignesParcourues = new HashSet();
+        while (!retracageStation.equals(stationDepart)) {
+            nbTroncons++;
+            Troncon tronconRetracage = parcoursDesStations.get(retracageStation);
+            if (tronconRetracage==null) {
+                break;
+            }
+            lignesParcourues.add(tronconRetracage.getLigne());
+            tracageParcours.add(tronconRetracage);
+            dureeTransport += tronconRetracage.getDuree();
+            retracageStation = tronconRetracage.getStationDepart();
+        }
+        dureeTotale += dureeTransport;
+        for (Ligne lignesParcourue : lignesParcourues) {
+            dureeTotale += lignesParcourue.getAttenteMoyenne();
+        }
+
+        Collections.reverse(tracageParcours);
+        for (Troncon troncon : tracageParcours) {
+            System.out.println(troncon);
+        }
+
+        System.out.println("NbrTroncons="+nbTroncons);
+        System.out.println("dureeTransport="+dureeTransport + "  dureeTotale=" + dureeTotale );
     }
 }
