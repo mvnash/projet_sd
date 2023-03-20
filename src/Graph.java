@@ -90,41 +90,10 @@ public class Graph {
                     stationsParcourues.add(troncon.getStationFin());
                 }
 
-                if (troncon.getStationFin().equals(stationArrivee)) {
-                    trouve = true;
-                    break;
-                }
+                trouve = troncon.getStationFin().equals(stationArrivee);
             }
         }
-        int dureeTotale = 0;
-        int dureeTransport = 0;
-        int nbTroncons = 0;
-        Station retracageStation = stationArrivee;
-        ArrayList<Troncon> tracageParcours = new ArrayList<>();
-        HashSet<Ligne> lignesParcourues = new HashSet();
-        while (!retracageStation.equals(stationDepart)) {
-            nbTroncons++;
-            Troncon tronconRetracage = parcoursDesStations.get(retracageStation);
-            if (tronconRetracage==null) {
-                break;
-            }
-            lignesParcourues.add(tronconRetracage.getLigne());
-            tracageParcours.add(tronconRetracage);
-            dureeTransport += tronconRetracage.getDuree();
-            retracageStation = tronconRetracage.getStationDepart();
-        }
-        dureeTotale += dureeTransport;
-        for (Ligne lignesParcourue : lignesParcourues) {
-            dureeTotale += lignesParcourue.getAttenteMoyenne();
-        }
-
-        Collections.reverse(tracageParcours);
-        for (Troncon troncon : tracageParcours) {
-            System.out.println(troncon);
-        }
-
-        System.out.println("NbrTroncons="+nbTroncons);
-        System.out.println("dureeTransport="+dureeTransport + "  dureeTotale=" + dureeTotale );
+        affichage(stationDepart,stationArrivee,parcoursDesStations);
     }
 
     public void calculerCheminMinimisantTempsTransport(String stationDepart, String stationArrivee) {
@@ -156,8 +125,10 @@ public class Graph {
                 }
             }
         }
+        affichage(depart,arrivee,parcoursDesStations);
+    }
 
-        // Affichage
+    public void affichage(Station stationDepart, Station arrivee, HashMap<Station,Troncon> parcoursDesStations){
         int dureeTotale = 0;
         int dureeTransport = 0;
         int nbTroncons = 0;
