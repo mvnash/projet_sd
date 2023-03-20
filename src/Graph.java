@@ -133,23 +133,28 @@ public class Graph {
         int dureeTransport = 0;
         int nbTroncons = 0;
         Station retracageStation = arrivee;
+        Troncon tronconPrecedent = null;
         ArrayList<Troncon> tracageParcours = new ArrayList<>();
-        HashSet<Ligne> lignesParcourues = new HashSet();
         while (!retracageStation.equals(stationDepart)) {
             Troncon tronconRetracage = parcoursDesStations.get(retracageStation);
             if (tronconRetracage==null) {
                 break;
             }
             nbTroncons++;
-            lignesParcourues.add(tronconRetracage.getLigne());
+            if(tronconPrecedent == null){
+                dureeTotale+= tronconRetracage.getLigne().getAttenteMoyenne();
+            }
+            else{
+                if(tronconPrecedent.getLigne().getId()!=tronconRetracage.getLigne().getId()){
+                    dureeTotale += tronconRetracage.getLigne().getAttenteMoyenne();
+                }
+            }
+            tronconPrecedent = tronconRetracage;
             tracageParcours.add(tronconRetracage);
             dureeTransport += tronconRetracage.getDuree();
             retracageStation = tronconRetracage.getStationDepart();
         }
         dureeTotale += dureeTransport;
-        for (Ligne lignesParcourue : lignesParcourues) {
-            dureeTotale += lignesParcourue.getAttenteMoyenne();
-        }
 
         Collections.reverse(tracageParcours);
         for (Troncon troncon : tracageParcours) {
