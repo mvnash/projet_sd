@@ -49,16 +49,17 @@ public class Graph {
             String nomStationDepart = datas[1];
             String nomStationArrivee = datas[2];
 
-            Station stationDepart = new Station(nomStationDepart);
-            Station stationArrivee = new Station(nomStationArrivee);
-
             if (!correspondanceStringStation.containsKey(nomStationDepart)) {
+                Station stationDepart = new Station(nomStationDepart);
                 correspondanceStringStation.put(nomStationDepart, stationDepart);
             }
+            Station stationDepart = correspondanceStringStation.get(nomStationDepart);
 
             if (!correspondanceStringStation.containsKey(nomStationArrivee)) {
+                Station stationArrivee = new Station(nomStationArrivee);
                 correspondanceStringStation.put(nomStationArrivee, stationArrivee);
             }
+            Station stationArrivee = correspondanceStringStation.get(nomStationArrivee);
 
             Troncon troncon = new Troncon(correspondanceIdLigneVersLigne.get(Integer.parseInt(datas[0])), stationDepart, stationArrivee, Integer.parseInt(datas[3]));
             if (!mapTronconsParStation.containsKey(stationDepart)) {
