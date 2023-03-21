@@ -24,48 +24,12 @@ public class Graph {
             throw new RuntimeException(e);
         }
 
-        String ligneFichierLignes;
-
         while (scannerLigne.hasNext()) {
-            ligneFichierLignes = scannerLigne.nextLine();
-            String[] datas = ligneFichierLignes.split(",");
-            int identifiantLigne = Integer.parseInt(datas[0]);
-            String numeroTransport = datas[1];
-            String stationDepart = datas[2];
-            String stationArrivee = datas[3];
-            String typeTransport = datas[4];
-            int attenteEstimee = Integer.parseInt(datas[5]);
-
-            Ligne nouvelleLigne = new Ligne(identifiantLigne, attenteEstimee, stationDepart, stationArrivee, typeTransport, numeroTransport);
-            correspondanceIdLigneVersLigne.put(identifiantLigne, nouvelleLigne);
+            creerLigne(scannerLigne.nextLine());
         }
 
-
-        String ligneFichierTroncons;
-
         while (scannerTroncons.hasNext()) {
-            ligneFichierTroncons = scannerTroncons.nextLine();
-            String[] datas = ligneFichierTroncons.split(",");
-            String nomStationDepart = datas[1];
-            String nomStationArrivee = datas[2];
-
-            if (!correspondanceStringStation.containsKey(nomStationDepart)) {
-                Station stationDepart = new Station(nomStationDepart);
-                correspondanceStringStation.put(nomStationDepart, stationDepart);
-            }
-            Station stationDepart = correspondanceStringStation.get(nomStationDepart);
-
-            if (!correspondanceStringStation.containsKey(nomStationArrivee)) {
-                Station stationArrivee = new Station(nomStationArrivee);
-                correspondanceStringStation.put(nomStationArrivee, stationArrivee);
-            }
-            Station stationArrivee = correspondanceStringStation.get(nomStationArrivee);
-
-            Troncon troncon = new Troncon(correspondanceIdLigneVersLigne.get(Integer.parseInt(datas[0])), stationDepart, stationArrivee, Integer.parseInt(datas[3]));
-            if (!mapTronconsParStation.containsKey(stationDepart)) {
-                mapTronconsParStation.put(stationDepart, new HashSet<>());
-            }
-            mapTronconsParStation.get(stationDepart).add(troncon);
+            creerTroncon(scannerTroncons.nextLine());
         }
     }
 
@@ -75,7 +39,9 @@ public class Graph {
         Queue<Station> fileBFS = new ArrayDeque<>();
 
         Station stationDepart = correspondanceStringStation.get(nomStationDepart);
+        if (stationDepart==null) throw new IllegalArgumentException("calculerCheminMinimisantNombreTroncons=> Station de départ inconnue");
         Station stationArrivee = correspondanceStringStation.get(nomStationArrivee);
+        if (stationArrivee==null) throw new IllegalArgumentException("calculerCheminMinimisantNombreTroncons=> Station d'arrivée inconnue");
         stationsParcourues.add(stationDepart);
         fileBFS.add(stationDepart);
         boolean trouve = false;
@@ -99,10 +65,12 @@ public class Graph {
     public void calculerCheminMinimisantTempsTransport(String stationDepart, String stationArrivee) {
         TreeSet<Station> treeSetStation = new TreeSet<>(Comparator.comparing(Station::getTempsPourArriver).thenComparing(Station::getNomStation));
         HashMap<Station, Troncon> parcoursDesStations = new HashMap<>();
-        HashSet<Station> definitives=new HashSet<>();
+        HashSet<Station> definitives = new HashSet<>();
 
         Station depart = correspondanceStringStation.get(stationDepart);
+        if (depart==null) throw new IllegalArgumentException("calculerCheminMinimisantTempsTransport=> Station de départ inconnue");
         Station arrivee = correspondanceStringStation.get(stationArrivee);
+        if (arrivee==null) throw new IllegalArgumentException("calculerCheminMinimisantTempsTransport=> Station d'arrivée inconnue");
 
         depart.setTempsPourArriver(0);
         treeSetStation.add(depart);
@@ -161,5 +129,45 @@ public class Graph {
 
         System.out.println("NbrTroncons=" + nbTroncons);
         System.out.println("dureeTransport=" + dureeTransport + "  dureeTotale=" + dureeTotale);
+    }
+
+    private void creerLigne(String stringLigneACreer) {
+        String[] datas = stringLigneACreer.split(",");
+        int identifiantLigne = Integer.parseInt(datas[0]);
+        String numeroTransport = datas[1];
+        String stationDepart = datas[2];
+        String stationArrivee = datas[3];
+        String typeTransport = datas[4];
+        int attenteEstimee = Integer.parseInt(datas[5]);
+
+        Ligne nouvelleLigne = new Ligne(identifiantLigne, attenteEstimee, stationDepart, stationArrivee, typeTransport, numeroTransport);
+        correspondanceIdLigneVersLigne.put(identifiantLigne, nouvelleLigne);
+    }
+
+    private void creerStation(String nomStation) {
+        Station station = new Station(nomStation);
+        correspondanceStringStation.put(nomStation, station);
+    }
+
+    private void creerTroncon(String stringTronconACreer) {
+        String[] datas = stringTronconACreer.split(",");
+        String nomStationDepart = datas[1];
+        String nomStationArrivee = datas[2];
+
+        if (!correspondanceStringStation.containsKey(nomStationDepart)) {
+            creerStation(nomStationDepart);
+        }
+        Station stationDepart = correspondanceStringStation.get(nomStationDepart);
+
+        if (!correspondanceStringStation.containsKey(nomStationArrivee)) {
+            creerStation(nomStationArrivee);
+        }
+        Station stationArrivee = correspondanceStringStation.get(nomStationArrivee);
+
+        Troncon troncon = new Troncon(correspondanceIdLigneVersLigne.get(Integer.parseInt(datas[0])), stationDepart, stationArrivee, Integer.parseInt(datas[3]));
+        if (!mapTronconsParStation.containsKey(stationDepart)) {
+            mapTronconsParStation.put(stationDepart, new HashSet<>());
+        }
+        mapTronconsParStation.get(stationDepart).add(troncon);
     }
 }
